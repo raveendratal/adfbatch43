@@ -1,0 +1,92 @@
+{
+	"name": "pl_resume_sqldwh",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetStatus",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "GET",
+					"url": {
+						"value": "https://management.azure.com/subscriptions/e0bf1971-b822-46ca-8e4a-72555f0a959e/resourceGroups/rg_batch43_dev/providers/Microsoft.Sql/servers/sqlserverbatch43/databases/sqldwhbatch43/?api-version=2014-04-01-preview",
+						"type": "Expression"
+					},
+					"authentication": {
+						"type": "MSI",
+						"resource": {
+							"value": "https://management.azure.com",
+							"type": "Expression"
+						}
+					}
+				}
+			},
+			{
+				"name": "If Condition1",
+				"type": "IfCondition",
+				"dependsOn": [
+					{
+						"activity": "GetStatus",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"expression": {
+						"value": "@equals(activity('GetStatus').output.properties.status,'Paused')",
+						"type": "Expression"
+					},
+					"ifTrueActivities": [
+						{
+							"name": "Resume",
+							"type": "WebActivity",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"method": "POST",
+								"url": {
+									"value": "https://management.azure.com/subscriptions/e0bf1971-b822-46ca-8e4a-72555f0a959e/resourceGroups/rg_batch43_dev/providers/Microsoft.Sql/servers/sqlserverbatch43/databases/sqldwhbatch43/resume?api-version=2014-04-01-preview",
+									"type": "Expression"
+								},
+								"body": {
+									"value": "{}",
+									"type": "Expression"
+								},
+								"authentication": {
+									"type": "MSI",
+									"resource": {
+										"value": "https://management.azure.com",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Resume_Pause_SQLDWH"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-07-26T01:54:02Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

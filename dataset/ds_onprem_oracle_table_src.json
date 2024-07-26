@@ -1,0 +1,20 @@
+{
+	"name": "ds_onprem_oracle_table_src",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_onprem_oracle_src_conn",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "data_migration"
+		},
+		"annotations": [],
+		"type": "OracleTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "SH",
+			"table": "CUSTOMERS"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

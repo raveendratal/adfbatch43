@@ -1,0 +1,37 @@
+{
+	"name": "ds_sqldwh_azure_adlsgen2_file_binary_tgt",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azure_adlsgen2_tgt_conn",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"target_folder": {
+				"type": "string"
+			},
+			"target_file": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "sqldwh_sales"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().target_file",
+					"type": "Expression"
+				},
+				"folderPath": {
+					"value": "@concat('landing/SH/',dataset().target_folder)",
+					"type": "Expression"
+				},
+				"fileSystem": "datalake"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

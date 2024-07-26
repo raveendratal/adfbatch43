@@ -1,0 +1,21 @@
+{
+	"name": "ds_onprem_file_binary_source",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_onprem_filesystem_src_conn",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "data_migration"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": "large_data.zip"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

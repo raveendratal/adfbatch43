@@ -1,0 +1,106 @@
+{
+	"name": "pl_sqldwh_sales_master_load",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetJobDetails",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlDWSource",
+						"sqlReaderQuery": {
+							"value": "select * from dbo.dynamic order by id",
+							"type": "Expression"
+						},
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "ds_azure_sqldwh_jobdetails",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "GetJobDetails",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetJobDetails').output.value",
+						"type": "Expression"
+					},
+					"isSequential": false,
+					"activities": [
+						{
+							"name": "pl_sqldwh_sales_child",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "pl_sqldwh_sales_child_load",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"id": {
+										"value": "@item().id",
+										"type": "Expression"
+									},
+									"job_name": {
+										"value": "@item().job_name",
+										"type": "Expression"
+									},
+									"stg_table": {
+										"value": "@item().stg_table",
+										"type": "Expression"
+									},
+									"target_table": {
+										"value": "@item().target_table",
+										"type": "Expression"
+									},
+									"proc_name": {
+										"value": "@item().proc_name",
+										"type": "Expression"
+									},
+									"source_folder": {
+										"value": "@item().source_folder",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "sqldwh_sales"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-07-25T02:07:52Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

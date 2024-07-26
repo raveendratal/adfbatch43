@@ -1,0 +1,24 @@
+{
+	"name": "ls_onprem_filesystem_src_conn",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "FileServer",
+		"typeProperties": {
+			"host": "E:\\files",
+			"userId": "reshwanth",
+			"password": {
+				"type": "AzureKeyVaultSecret",
+				"store": {
+					"referenceName": "ls_azure_keyvault",
+					"type": "LinkedServiceReference"
+				},
+				"secretName": "onprem-desktop-pwd"
+			}
+		},
+		"connectVia": {
+			"referenceName": "Shared-SelfhostedIR",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}

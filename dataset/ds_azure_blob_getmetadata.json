@@ -1,0 +1,21 @@
+{
+	"name": "ds_azure_blob_getmetadata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azure_blob_src_conn",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "data_migration"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"container": "documents"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

@@ -1,0 +1,16 @@
+{
+	"name": "ds_azure_Delta_job_details",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azure_db_delta",
+			"type": "LinkedServiceReference"
+		},
+		"folder": {
+			"name": "Sales_Data_Load"
+		},
+		"annotations": [],
+		"type": "AzureDatabricksDeltaLakeDataset",
+		"schema": []
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

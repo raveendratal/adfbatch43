@@ -1,0 +1,29 @@
+{
+	"name": "ds_sales_onprem_getmetadata",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_onprem_filesystem_src_conn",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"folder_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "Sales_Data_Load"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "FileServerLocation",
+				"folderPath": {
+					"value": "@concat('SH','/',dataset().folder_name)",
+					"type": "Expression"
+				}
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}

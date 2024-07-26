@@ -1,0 +1,149 @@
+{
+	"name": "pl_sales_master_load",
+	"properties": {
+		"activities": [
+			{
+				"name": "GetJobDetails",
+				"type": "Lookup",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "AzureDatabricksDeltaLakeSource",
+						"query": {
+							"value": "select * from jobs.JOB_LIST_DYNAMIC where job_status=1  order by job_id",
+							"type": "Expression"
+						}
+					},
+					"dataset": {
+						"referenceName": "ds_azure_Delta_job_details",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "GetJobDetails",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@activity('GetJobDetails').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "child_pipeline",
+							"type": "ExecutePipeline",
+							"dependsOn": [],
+							"policy": {
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"pipeline": {
+									"referenceName": "pl_sales_child_load",
+									"type": "PipelineReference"
+								},
+								"waitOnCompletion": true,
+								"parameters": {
+									"job_id": {
+										"value": "@item().job_id",
+										"type": "Expression"
+									},
+									"job_name": {
+										"value": "@item().job_name",
+										"type": "Expression"
+									},
+									"landing_zone_file_path": {
+										"value": "@item().landing_zone_file_path",
+										"type": "Expression"
+									},
+									"landing_zone_folder_name": {
+										"value": "@item().landing_zone_folder_name",
+										"type": "Expression"
+									},
+									"landing_zone_file_name": {
+										"value": "@item().landing_zone_file_name",
+										"type": "Expression"
+									},
+									"landing_zone_file_type": {
+										"value": "@item().landing_zone_file_type",
+										"type": "Expression"
+									},
+									"staging_zone_database_name": {
+										"value": "@item().staging_zone_database_name",
+										"type": "Expression"
+									},
+									"staging_zone_table_name": {
+										"value": "@item().staging_zone_table_name",
+										"type": "Expression"
+									},
+									"staging_zone_table_pk_column": {
+										"value": "@item().staging_zone_table_pk_column",
+										"type": "Expression"
+									},
+									"pyspark_schema": {
+										"value": "@item().pyspark_schema",
+										"type": "Expression"
+									},
+									"curation_zone_database_name": {
+										"value": "@item().curation_zone_database_name\t",
+										"type": "Expression"
+									},
+									"curation_zone_table_name": {
+										"value": "@item().curation_zone_table_name",
+										"type": "Expression"
+									},
+									"curation_zone_table_pk_column": {
+										"value": "@item().curation_zone_table_pk_column",
+										"type": "Expression"
+									},
+									"dw_zone_database_name": {
+										"value": "@item().dw_zone_database_name",
+										"type": "Expression"
+									},
+									"dw_zone_table_name": {
+										"value": "@item().dw_zone_table_name",
+										"type": "Expression"
+									},
+									"dw_zone_table_pk_column": {
+										"value": "@item().dw_zone_table_pk_column",
+										"type": "Expression"
+									},
+									"abc": "abc",
+									"table_type": {
+										"value": "@item().table_type",
+										"type": "Expression"
+									}
+								}
+							}
+						}
+					]
+				}
+			}
+		],
+		"folder": {
+			"name": "Sales_Data_Load"
+		},
+		"annotations": [],
+		"lastPublishTime": "2024-07-22T03:10:38Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}

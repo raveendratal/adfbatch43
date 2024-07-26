@@ -1,0 +1,30 @@
+{
+	"name": "ds_azure_blob_dynamic_src_file",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ls_azure_blob_src_conn",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"file_name": {
+				"type": "string"
+			}
+		},
+		"folder": {
+			"name": "data_migration"
+		},
+		"annotations": [],
+		"type": "Binary",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobStorageLocation",
+				"fileName": {
+					"value": "@dataset().file_name",
+					"type": "Expression"
+				},
+				"container": "documents"
+			}
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
